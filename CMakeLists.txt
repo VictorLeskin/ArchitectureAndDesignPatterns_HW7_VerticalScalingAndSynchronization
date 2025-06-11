@@ -22,8 +22,18 @@ add_executable(
 
   source/iCommand.cpp
   source/iCommand.hpp
-
+  source/cException.hpp
+  source/cExceptionsHandler.hpp
+  source/cExceptionsHandler.cpp
+  source/cCommandsDeque.hpp
+  source/cCommandsDeque.cpp
+  source/VerticalScalingAndSynchronization.hpp
+  source/VerticalScalingAndSynchronization.cpp
+  
   source/tests/test_iCommand.cpp
+  source/tests/test_cCommandsDeque.cpp
+  source/tests/test_VerticalScalingAndSynchronization.cpp
+  source/tests/test_cExceptionsHandler.cpp
 )
 
 target_include_directories(
