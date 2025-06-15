@@ -12,4 +12,5 @@ public:
 	virtual const char* Type() = 0;
 };
 
+
 #endif //#ifndef ICOMMAND_HPP

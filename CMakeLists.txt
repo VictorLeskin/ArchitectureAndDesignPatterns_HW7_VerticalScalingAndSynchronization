@@ -29,11 +29,17 @@ add_executable(
   source/cCommandsDeque.cpp
   source/VerticalScalingAndSynchronization.hpp
   source/VerticalScalingAndSynchronization.cpp
+  source/cStopCommand.hpp
+  source/cStopCommand.cpp
+  source/cServerThread.hpp
+  source/cServerThread.cpp
   
   source/tests/test_iCommand.cpp
   source/tests/test_cCommandsDeque.cpp
   source/tests/test_VerticalScalingAndSynchronization.cpp
   source/tests/test_cExceptionsHandler.cpp
+  source/tests/test_cStopCommand.cpp
+  source/tests/test_cServerThread.cpp
 )
 
 target_include_directories(
