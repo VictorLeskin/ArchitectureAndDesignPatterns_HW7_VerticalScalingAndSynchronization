@@ -1,19 +1,20 @@
 ///************************* OUTS HOMEWORK ****************************************
 
 #include "cStopCommand.hpp"
+#include <cException.hpp>
 
 void cAbortCommand::Execute()
 {
-	throw(std::exception("not implemented"));
+	throw(cException("not implemented"));
 }
 
 void cSoftStopCommand::Execute()
 {
-	throw(std::exception("not implemented"));
+	throw(cException("not implemented"));
 }
 
 void cHardStopCommand::Execute()
 {
-	throw(std::exception("not implemented"));
+	throw(cException("not implemented"));
 }
 
