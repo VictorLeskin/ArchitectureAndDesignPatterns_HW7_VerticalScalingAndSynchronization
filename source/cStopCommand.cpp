@@ -1,7 +1,8 @@
 ///************************* OUTS HOMEWORK ****************************************
 
 #include "cStopCommand.hpp"
-#include <cException.hpp>
+#include "cException.hpp"
+#include "cServerThread.hpp"
 
 void cAbortCommand::Execute()
 {
@@ -10,11 +11,11 @@ void cAbortCommand::Execute()
 
 void cSoftStopCommand::Execute()
 {
-	throw(cException("not implemented"));
+	s->stopSoft();
 }
 
 void cHardStopCommand::Execute()
 {
-	throw(cException("not implemented"));
+	s->stopHard();
 }
 

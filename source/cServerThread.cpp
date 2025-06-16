@@ -4,16 +4,28 @@
 #include "cCommandsDeque.hpp"
 #include "cExceptionsHandler.hpp"
 #include "cException.hpp"
+#include <thread>
 
-static void tr(cServerThread& s);
+using namespace std::chrono_literals;
 
 cServerThread::cServerThread(cThreadSafeCommandsDeque* deque) : deque(deque)
 {
     behaviour = [](cServerThread& s)
         {
-            std::unique_ptr<iCommand> cmd = s.deque->pop_front();
-            try {
-                cmd->Execute();
+            std::unique_ptr<iCommand> cmd;
+            
+            try 
+            {
+                if( true == s.deque->pop_front(cmd) )
+                  cmd->Execute();
+
+                if (true == s.deque->empty())
+                {
+                  if (false == s.iSoftStop)
+                    std::this_thread::sleep_for(200ms);
+                  else
+                    s.iStop = true;
+                }
             }
             catch (cException e)
             {

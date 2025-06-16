@@ -10,6 +10,7 @@
 #include <map>
 
 #include "iCommand.hpp"
+#include <mutex>
 
 // A class of the deque of commands. It is just a wrapper of std::deque with pointers to commands.
 // std::unique_ptr  helps us avoid problems with a memory allocation/freeing.
@@ -36,6 +37,28 @@ protected:
 
 class cThreadSafeCommandsDeque : public cCommandsDeque
 { 
+public:
+	bool empty() const 
+	{ 
+		std::lock_guard<std::mutex> lock(m_mutex);
+		return cCommandsDeque::empty();
+	}
+
+	bool pop_front(std::unique_ptr< iCommand> &ret)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		if (commands.empty())
+			return false;
+		ret = cCommandsDeque::pop_front();
+		return true;
+	}
+	void push_back(std::unique_ptr < iCommand >& command)
+	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+		cCommandsDeque::push_back(command);
+	}
+protected:
+	mutable std::mutex m_mutex;
 };
 
 #endif //#ifndef CCOMMANDSDEQUE_HPP

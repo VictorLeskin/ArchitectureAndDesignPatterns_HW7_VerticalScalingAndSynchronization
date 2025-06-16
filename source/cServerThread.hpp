@@ -15,14 +15,19 @@ class cServerThread
 public:
     cServerThread(cThreadSafeCommandsDeque *deque);
 
-    void stop() 
-    {
-        iStop = true;
-    }
-
     void join() 
     {
         t.join();
+    }
+
+    void stopSoft()
+    {
+      iSoftStop = true;
+    }
+
+    void stopHard()
+    {
+      iStop = true;
     }
 
 protected:
@@ -30,7 +35,7 @@ protected:
     cExceptionsHandler* handler;
     std::thread t;
     std::function<void(cServerThread &)> behaviour;
-    std::atomic_int iStop = false;
+    std::atomic_int iStop = false, iSoftStop = false;
 
 };
 
