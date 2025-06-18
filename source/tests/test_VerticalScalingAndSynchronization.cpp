@@ -47,7 +47,10 @@ TEST_F(test_VerticalScalingAndSynchronization, test_thread_start)
   Test_cServerThread t1(&deque1);
 
   for (int i = 0; i < 10; ++i)
-    deque1.push_back(std::move(std::unique_ptr<iCommand>(new cCommandCounter(&t1))));
+  {
+    std::unique_ptr<iCommand> t8(new cCommandCounter(&t1));
+    deque1.push_back(t8);
+  }
   
 
   t1.detach();
@@ -68,7 +71,7 @@ TEST_F(test_VerticalScalingAndSynchronization, test_thread_start)
   EXPECT_NEAR(1000, t1.SleptTimeMs(), 201 );
 
   std::unique_ptr<iCommand> softStopCmd1(new cSoftStopCommand(&t1));
-  deque1.push_back(std::move(softStopCmd1));
+  deque1.push_back(softStopCmd1);
 }
 
 
@@ -81,10 +84,10 @@ TEST_F(test_VerticalScalingAndSynchronization, test_thread_hardStop)
   std::unique_ptr<iCommand> hardStopCmd1(new cHardStopCommand(&t1));
 
   for( int i = 0; i < 10; ++i )
-    deque1.push_back(std::move(std::unique_ptr<iCommand>(new cCommandCounter(&t1)) ));
-  deque1.push_back(std::move(hardStopCmd1));
+    deque1.push_back( std::unique_ptr<iCommand>(new cCommandCounter(&t1)) );
+  deque1.push_back(hardStopCmd1);
   for (int i = 0; i < 10; ++i)
-    deque1.push_back(std::move(std::unique_ptr<iCommand>(new cCommandCounter(&t1))));
+    deque1.push_back(std::unique_ptr<iCommand>(new cCommandCounter(&t1)));
 
   t1.bEnableStart = true;
   t1.join();
@@ -102,10 +105,10 @@ TEST_F(test_VerticalScalingAndSynchronization, test_thread_softStop)
   std::unique_ptr<iCommand> softStopCmd1(new cSoftStopCommand(&t1));
 
   for (int i = 0; i < 10; ++i)
-    deque1.push_back(std::move(std::unique_ptr<iCommand>(new cCommandCounter(&t1))));
-  deque1.push_back(std::move(softStopCmd1));
+    deque1.push_back(std::unique_ptr<iCommand>(new cCommandCounter(&t1)));
+  deque1.push_back(softStopCmd1);
   for (int i = 0; i < 10; ++i)
-    deque1.push_back(std::move(std::unique_ptr<iCommand>(new cCommandCounter(&t1))));
+    deque1.push_back(std::unique_ptr<iCommand>(new cCommandCounter(&t1)));
 
   t1.bEnableStart = true;
   t1.join();
