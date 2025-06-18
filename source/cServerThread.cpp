@@ -22,7 +22,10 @@ cServerThread::cServerThread(cThreadSafeCommandsDeque* deque) : deque(deque)
                 if (true == s.deque->empty())
                 {
                   if (false == s.iSoftStop)
+                  {
                     std::this_thread::sleep_for(200ms);
+                    s.sleepTimeMs += 200;
+                  }
                   else
                     s.iStop = true;
                 }
@@ -36,6 +39,11 @@ cServerThread::cServerThread(cThreadSafeCommandsDeque* deque) : deque(deque)
     t = std::thread(
         [](cServerThread& s)
         {
+          {
+            std::unique_lock<std::mutex> lock(s.m);
+            s.cv.wait(lock, [&] { return s.bEnableStart; }); // Wait tille bEnableStart is false
+          }
+
             while (!s.iStop)
             {
                 s.behaviour(s);
@@ -43,4 +51,9 @@ cServerThread::cServerThread(cThreadSafeCommandsDeque* deque) : deque(deque)
         },
         std::ref(*this)
     );
+}
+
+void cServerThread::Execute(const cCommandCounter&)
+{
+  iCommandCounter++;
 }

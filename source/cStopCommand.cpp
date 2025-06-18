@@ -4,18 +4,17 @@
 #include "cException.hpp"
 #include "cServerThread.hpp"
 
-void cAbortCommand::Execute()
-{
-	throw(cException("not implemented"));
-}
-
 void cSoftStopCommand::Execute()
 {
-	s->stopSoft();
+	s->Execute(*this);
 }
 
 void cHardStopCommand::Execute()
 {
-	s->stopHard();
+	s->Execute(*this);
 }
 
+void cCommandCounter::Execute()
+{
+	s->Execute( *this );
+}

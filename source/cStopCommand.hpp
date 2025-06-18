@@ -7,19 +7,6 @@
 
 class cServerThread;
 
-class cAbortCommand : public iCommand
-{
-public:
-	cAbortCommand(cServerThread* s) : s(s) {}
-
-	void Execute() override;
-
-	const char* Type() override { return typeid(*this).name(); }
-
-protected:
-	cServerThread* s;
-};
-
 // stop after deque empty
 class cSoftStopCommand : public iCommand
 {
@@ -47,5 +34,22 @@ public:
 protected:
 	cServerThread* s;
 };
+
+// stop after execution of this command
+class cCommandCounter : public iCommand
+{
+public:
+	cCommandCounter(cServerThread* s) : s(s) {}
+
+	void Execute() override;
+
+	const char* Type() override { return typeid(*this).name(); }
+
+protected:
+	cServerThread* s;
+};
+
+
+
 
 #endif //#ifndef CSTOPCOMMAND_HPP

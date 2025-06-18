@@ -5,6 +5,8 @@
 #include <functional>
 #include <atomic>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 class cThreadSafeCommandsDeque;
 class cExceptionsHandler;
@@ -20,15 +22,16 @@ public:
         t.join();
     }
 
-    void stopSoft()
+    void detach()
     {
-      iSoftStop = true;
+      t.detach();
     }
 
-    void stopHard()
-    {
-      iStop = true;
-    }
+    int SleptTimeMs() const { return sleepTimeMs;  };
+
+    void Execute(const class cSoftStopCommand&) { iSoftStop = true; }
+    void Execute(const class cHardStopCommand&) { iStop = true; }
+    void Execute(const class cCommandCounter&);
 
 protected:
     cThreadSafeCommandsDeque* deque;
@@ -37,6 +40,12 @@ protected:
     std::function<void(cServerThread &)> behaviour;
     std::atomic_int iStop = false, iSoftStop = false;
 
+    std::mutex m;
+    std::condition_variable cv;
+    bool bEnableStart = false;
+
+    int sleepTimeMs = 0;
+    int iCommandCounter = 0;
 };
 
 #endif //#ifndef CSERVERTHREAD_HPP
